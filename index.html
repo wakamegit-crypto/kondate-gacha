@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ===== 基本SEO ===== -->
+<title>献立ルーレット｜今日のご飯どうしよう？を解決する献立ガチャ</title>
+<meta name="description" content="今日の献立に迷ったら『献立ルーレット』。和食・洋食・中華のジャンル選択や冷蔵庫の余り物食材から、料理をランダムに提案。クリックでGoogleレシピ検索にすぐアクセスできる無料アプリ。">
+<meta name="keywords" content="献立,ルーレット,ガチャ,ご飯,夕飯,晩ご飯,献立決め,冷蔵庫,余り物,レシピ,ランダム,和食,洋食,中華">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#fd79a8">
+<link rel="canonical" href="https://kondate-gacha.vercel.app/">
+
+<!-- ===== OGP (Facebook / LINE 等) ===== -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="献立ルーレット｜今日のご飯どうしよう？を解決する献立ガチャ">
+<meta property="og:description" content="和食・洋食・中華のジャンル選択や冷蔵庫の余り物食材から、料理をランダムに提案。クリックでGoogleレシピ検索にすぐアクセスできる無料アプリ。">
+<meta property="og:url" content="https://kondate-gacha.vercel.app/">
+<meta property="og:image" content="https://kondate-gacha.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="献立ルーレット">
+<meta property="og:locale" content="ja_JP">
+
+<!-- ===== Twitter Card ===== -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="献立ルーレット｜今日のご飯どうしよう？">
+<meta name="twitter:description" content="ジャンル・冷蔵庫の食材から献立をランダム提案。クリックでレシピ検索もすぐ。">
+<meta name="twitter:image" content="https://kondate-gacha.vercel.app/og-image.png">
+
+<!-- ===== Favicon (SVG絵文字・外部画像不要) ===== -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%22.9em%22%20font-size%3D%2290%22%3E%F0%9F%8D%B3%3C/text%3E%3C/svg%3E">
+
+<!-- ===== JSON-LD 構造化データ ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "献立ルーレット",
+  "description": "和食・洋食・中華のジャンル選択や冷蔵庫の余り物食材から、料理をランダムに提案する献立ガチャアプリ。",
+  "url": "https://kondate-gacha.vercel.app/",
+  "applicationCategory": "LifestyleApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "JPY"
+  },
+  "inLanguage": "ja"
+}
+</script>
+
+<!-- ===== Google AdSense =====
+     審査通過後に下記を有効化（pub-IDを実際のものに置換）:
+
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+===== -->
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+    background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+    min-height: 100vh;
+    padding: 24px 16px;
+    color: #2d3436;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 24px;
+    padding: 32px 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  }
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #636e72;
+    margin-bottom: 28px;
+  }
+  .genre-section {
+    margin-bottom: 24px;
+  }
+  .genre-label {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 12px;
+    color: #2d3436;
+  }
+  .genre-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .genre-btn {
+    padding: 10px 16px;
+    border: 2px solid #dfe6e9;
+    background: #fff;
+    border-radius: 999px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .genre-btn:hover {
+    border-color: #fab1a0;
+  }
+  .genre-btn.active {
+    background: #fd79a8;
+    border-color: #fd79a8;
+    color: #fff;
+  }
+  .ingredient-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #dfe6e9;
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.15s;
+  }
+  .ingredient-input:focus {
+    outline: none;
+    border-color: #fd79a8;
+  }
+  .ingredient-hint {
+    font-size: 11px;
+    color: #636e72;
+    margin-top: 6px;
+  }
+  .result-area {
+    text-align: center;
+    margin: 32px 0;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .result-dish {
+    font-size: 36px;
+    font-weight: bold;
+    color: #2d3436;
+    margin-bottom: 12px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    transition: background 0.15s;
+  }
+  .result-dish.clickable {
+    cursor: pointer;
+  }
+  .result-dish.clickable:hover {
+    background: #ffeaa7;
+  }
+  .result-dish.spinning {
+    color: #fd79a8;
+  }
+  .result-dish.placeholder {
+    color: #b2bec3;
+    font-size: 20px;
+    font-weight: normal;
+  }
+  .result-dish.error {
+    color: #e17055;
+    font-size: 18px;
+    font-weight: normal;
+  }
+  .match-info {
+    font-size: 12px;
+    color: #00b894;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+  .result-link {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 10px 20px;
+    background: #74b9ff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: bold;
+    transition: background 0.15s;
+  }
+  .result-link:hover {
+    background: #0984e3;
+  }
+  .roulette-btn {
+    display: block;
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, #fd79a8 0%, #fdcb6e 100%);
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s;
+    font-family: inherit;
+    box-shadow: 0 8px 20px rgba(253, 121, 168, 0.4);
+  }
+  .roulette-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(253, 121, 168, 0.5);
+  }
+  .roulette-btn:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  .roulette-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  footer {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 11px;
+    color: #636e72;
+  }
+  .nutrition-card {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+    padding: 12px 8px;
+    background: #f5f6fa;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 360px;
+  }
+  .nutrition-item {
+    text-align: center;
+    flex: 1;
+    min-width: 64px;
+  }
+  .nutrition-label {
+    font-size: 11px;
+    color: #636e72;
+    margin-bottom: 2px;
+  }
+  .nutrition-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2d3436;
+  }
+  .nutrition-unit {
+    font-size: 11px;
+    color: #636e72;
+    margin-left: 2px;
+  }
+  .nutrition-disclaimer {
+    font-size: 10px;
+    color: #b2bec3;
+    margin-top: 4px;
+    text-align: right;
+    max-width: 360px;
+    width: 100%;
+  }
+  .ad-slot {
+    margin: 24px 0;
+    padding: 24px 16px;
+    background: #f5f6fa;
+    border: 2px dashed #b2bec3;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 12px;
+    color: #b2bec3;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ad-label {
+    font-size: 10px;
+    color: #b2bec3;
+    text-align: center;
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+  }
+  .privacy-link {
+    color: #636e72;
+    text-decoration: underline;
+    margin: 0 4px;
+  }
+  .privacy-link:hover {
+    color: #fd79a8;
+  }
+  .about-section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #dfe6e9;
+    font-size: 13px;
+    color: #2d3436;
+    line-height: 1.75;
+  }
+  .about-section h2 {
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    color: #2d3436;
+  }
+  .about-section h2:first-child {
+    margin-top: 0;
+  }
+  .about-section p {
+    margin-bottom: 8px;
+    color: #636e72;
+  }
+  .about-section ol {
+    padding-left: 20px;
+    margin-bottom: 8px;
+    color: #636e72;
+  }
+  .about-section ol li {
+    margin-bottom: 4px;
+  }
+  .faq dt {
+    font-weight: bold;
+    margin-top: 14px;
+    color: #2d3436;
+  }
+  .faq dd {
+    margin-left: 0;
+    margin-top: 4px;
+    color: #636e72;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🍳 献立ルーレット</h1>
+  <p class="subtitle">今日のご飯、ルーレットで決めよう！</p>
+
+  <div class="genre-section">
+    <div class="genre-label">料理ジャンル（複数可・未選択ですべて）</div>
+    <div class="genre-buttons">
+      <button class="genre-btn" data-group="cuisine" data-value="和食">和食</button>
+      <button class="genre-btn" data-group="cuisine" data-value="洋食">洋食</button>
+      <button class="genre-btn" data-group="cuisine" data-value="中華">中華</button>
+    </div>
+  </div>
+
+  <div class="genre-section">
+    <div class="genre-label">メイン食材（複数可・未選択ですべて）</div>
+    <div class="genre-buttons">
+      <button class="genre-btn" data-group="main" data-value="肉">肉系</button>
+      <button class="genre-btn" data-group="main" data-value="魚">魚系</button>
+    </div>
+  </div>
+
+  <div class="genre-section">
+    <div class="genre-label">食材で絞り込み（任意・カンマ区切り）</div>
+    <input type="text" id="ingredientInput" class="ingredient-input" placeholder="例: 豚肉、玉ねぎ、卵">
+    <div class="ingredient-hint">入力した食材を多く含む料理が優先されます</div>
+  </div>
+
+  <div class="result-area">
+    <div id="matchInfo" class="match-info" style="display:none;"></div>
+    <div class="result-dish placeholder" id="resultDish">ボタンを押してね</div>
+    <div id="nutritionArea" style="display:none; width:100%; flex-direction:column; align-items:center;">
+      <div class="nutrition-card">
+        <div class="nutrition-item">
+          <div class="nutrition-label">カロリー</div>
+          <div><span class="nutrition-value" id="ntKcal">-</span><span class="nutrition-unit">kcal</span></div>
+        </div>
+        <div class="nutrition-item">
+          <div class="nutrition-label">たんぱく質</div>
+          <div><span class="nutrition-value" id="ntProtein">-</span><span class="nutrition-unit">g</span></div>
+        </div>
+        <div class="nutrition-item">
+          <div class="nutrition-label">脂質</div>
+          <div><span class="nutrition-value" id="ntFat">-</span><span class="nutrition-unit">g</span></div>
+        </div>
+        <div class="nutrition-item">
+          <div class="nutrition-label">糖質</div>
+          <div><span class="nutrition-value" id="ntCarbs">-</span><span class="nutrition-unit">g</span></div>
+        </div>
+      </div>
+      <div class="nutrition-disclaimer">※一般的な1人前の目安値です</div>
+    </div>
+    <div id="resultHint"></div>
+  </div>
+
+  <button class="roulette-btn" id="rouletteBtn">ルーレットを回す！</button>
+
+  <footer>料理名をクリックするとGoogleでレシピを検索します</footer>
+
+  <!-- 広告スロット① ルーレット直下 (AdSense審査通過後、下の <ins> ブロックを差し込んで .ad-slot のプレースホルダーテキストを削除) -->
+  <div class="ad-slot" aria-label="広告">
+    <div>
+      <div class="ad-label">広告スロット①（AdSense審査後に実コードを配置）</div>
+      <div>レスポンシブ広告ユニット推奨 / data-ad-format="auto"</div>
+    </div>
+    <!--
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    -->
+  </div>
+
+  <section class="about-section">
+    <h2>このアプリについて</h2>
+    <p>「今日のご飯どうしよう？」と毎日悩んでいませんか？『献立ルーレット』は、迷ったときにボタン1つで献立を提案してくれる無料のWebアプリです。和食・洋食・中華のジャンルや、冷蔵庫の余り物食材から、ぴったりの料理がランダムに表示されます。家族の夕飯メニュー決めや、一人暮らしの自炊メニューに迷ったときにご活用ください。</p>
+
+    <h2>使い方</h2>
+    <ol>
+      <li>料理ジャンル（和食 / 洋食 / 中華）を選びます。複数選択もOK、未選択ならすべてのジャンルが対象になります。</li>
+      <li>メイン食材（肉系 / 魚系）でさらに絞り込みできます。</li>
+      <li>冷蔵庫にある食材をカンマか読点で区切って入力すると、その食材を多く使う料理が優先されます。</li>
+      <li>「ルーレットを回す」ボタンを押すと、料理名がランダムに選ばれます。料理名やリンクをクリックすると、Googleでレシピを検索できます。</li>
+    </ol>
+
+    <h2>よくある質問</h2>
+    <dl class="faq">
+      <dt>食材はどう入力すればいいですか？</dt>
+      <dd>「豚肉、玉ねぎ、卵」のようにカンマか読点で区切って入力してください。「豚」とだけ入力しても「豚肉」「豚バラ」などにも反応します。</dd>
+
+      <dt>該当する料理が見つからない場合は？</dt>
+      <dd>入力する食材を減らすか、ジャンル選択を解除してみてください。マイナーな食材は対応していない場合があります。</dd>
+
+      <dt>レシピは表示されますか？</dt>
+      <dd>料理名をクリックするとGoogle検索が開き、複数のレシピサイトを横断的に確認できます。お好みのレシピサイトを選んでご利用ください。</dd>
+
+      <dt>登録や費用は必要ですか？</dt>
+      <dd>登録不要・完全無料でご利用いただけます。ブラウザだけで動作するので、スマホでもPCでも使えます。</dd>
+    </dl>
+
+    <!-- 広告スロット② コンテンツ読了後 -->
+    <div class="ad-slot" aria-label="広告">
+      <div>
+        <div class="ad-label">広告スロット②（AdSense審査後に実コードを配置）</div>
+        <div>レスポンシブ広告ユニット推奨</div>
+      </div>
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="XXXXXXXXXX"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+    </div>
+
+    <p style="margin-top:24px; font-size:11px; color:#636e72; text-align:center;">
+      <a href="privacy.html" class="privacy-link">プライバシーポリシー</a>
+      <span style="color:#dfe6e9;">|</span>
+      <a href="mailto:totsuren@gmail.com" class="privacy-link">お問い合わせ</a>
+    </p>
+  </section>
+</div>
+
+<script>
+const dishes = [
+  // 和食 × 肉
+  { name: '肉じゃが', cuisine: '和食', main: '肉', ingredients: ['牛肉','豚肉','じゃがいも','玉ねぎ','にんじん','しらたき'] },
+  { name: 'すき焼き', cuisine: '和食', main: '肉', ingredients: ['牛肉','白菜','ねぎ','春菊','豆腐','しらたき','卵'] },
+  { name: 'しゃぶしゃぶ', cuisine: '和食', main: '肉', ingredients: ['牛肉','豚肉','白菜','きのこ','豆腐','ねぎ'] },
+  { name: '親子丼', cuisine: '和食', main: '肉', ingredients: ['鶏肉','玉ねぎ','卵','ご飯','三つ葉'] },
+  { name: '豚の生姜焼き', cuisine: '和食', main: '肉', ingredients: ['豚肉','生姜','玉ねぎ','キャベツ'] },
+  { name: '鶏の照り焼き', cuisine: '和食', main: '肉', ingredients: ['鶏肉','醤油','みりん'] },
+  { name: 'カツ丼', cuisine: '和食', main: '肉', ingredients: ['豚肉','卵','玉ねぎ','ご飯','パン粉'] },
+  { name: '牛丼', cuisine: '和食', main: '肉', ingredients: ['牛肉','玉ねぎ','ご飯'] },
+  { name: '焼き鳥', cuisine: '和食', main: '肉', ingredients: ['鶏肉','ねぎ'] },
+  { name: '唐揚げ', cuisine: '和食', main: '肉', ingredients: ['鶏肉','片栗粉','生姜','にんにく'] },
+  { name: '筑前煮', cuisine: '和食', main: '肉', ingredients: ['鶏肉','ごぼう','にんじん','れんこん','こんにゃく','しいたけ'] },
+  { name: '豚汁', cuisine: '和食', main: '肉', ingredients: ['豚肉','ごぼう','にんじん','大根','こんにゃく','味噌'] },
+  { name: '肉豆腐', cuisine: '和食', main: '肉', ingredients: ['牛肉','豆腐','ねぎ'] },
+  { name: '豚の角煮', cuisine: '和食', main: '肉', ingredients: ['豚肉','生姜','ねぎ','卵'] },
+  { name: 'つくね', cuisine: '和食', main: '肉', ingredients: ['鶏肉','ひき肉','ねぎ','卵'] },
+  { name: '鶏の竜田揚げ', cuisine: '和食', main: '肉', ingredients: ['鶏肉','片栗粉','生姜'] },
+  // 和食 × 魚
+  { name: '焼き鮭', cuisine: '和食', main: '魚', ingredients: ['鮭'] },
+  { name: '鯖の味噌煮', cuisine: '和食', main: '魚', ingredients: ['鯖','味噌','生姜'] },
+  { name: 'さばの塩焼き', cuisine: '和食', main: '魚', ingredients: ['鯖'] },
+  { name: 'ぶり大根', cuisine: '和食', main: '魚', ingredients: ['ぶり','大根'] },
+  { name: 'ぶりの照り焼き', cuisine: '和食', main: '魚', ingredients: ['ぶり'] },
+  { name: '刺身定食', cuisine: '和食', main: '魚', ingredients: ['刺身','まぐろ','サーモン'] },
+  { name: '海鮮丼', cuisine: '和食', main: '魚', ingredients: ['刺身','まぐろ','サーモン','ご飯'] },
+  { name: '握り寿司', cuisine: '和食', main: '魚', ingredients: ['まぐろ','サーモン','えび','ご飯'] },
+  { name: 'ちらし寿司', cuisine: '和食', main: '魚', ingredients: ['ご飯','卵','えび','刺身'] },
+  { name: 'さんまの塩焼き', cuisine: '和食', main: '魚', ingredients: ['さんま','大根'] },
+  { name: 'いわしの蒲焼き', cuisine: '和食', main: '魚', ingredients: ['いわし'] },
+  { name: 'ちゃんちゃん焼き', cuisine: '和食', main: '魚', ingredients: ['鮭','キャベツ','玉ねぎ','もやし','味噌'] },
+  { name: '鮭のホイル焼き', cuisine: '和食', main: '魚', ingredients: ['鮭','きのこ','玉ねぎ','バター'] },
+  { name: 'あじの南蛮漬け', cuisine: '和食', main: '魚', ingredients: ['あじ','玉ねぎ','にんじん'] },
+  { name: 'カレイの煮付け', cuisine: '和食', main: '魚', ingredients: ['カレイ','生姜'] },
+  { name: 'タラの煮付け', cuisine: '和食', main: '魚', ingredients: ['タラ','生姜'] },
+  { name: 'たこ焼き', cuisine: '和食', main: '魚', ingredients: ['たこ','卵','小麦粉','キャベツ','ねぎ'] },
+  // 和食 × その他
+  { name: '天ぷら', cuisine: '和食', main: 'その他', ingredients: ['えび','なす','かぼちゃ','玉ねぎ','しいたけ','小麦粉'] },
+  { name: 'おでん', cuisine: '和食', main: 'その他', ingredients: ['大根','卵','こんにゃく','ちくわ','はんぺん'] },
+  { name: 'お好み焼き', cuisine: '和食', main: 'その他', ingredients: ['キャベツ','卵','小麦粉','豚肉'] },
+  { name: '味噌煮込みうどん', cuisine: '和食', main: 'その他', ingredients: ['うどん','鶏肉','卵','ねぎ','しいたけ','味噌'] },
+  { name: '茶碗蒸し', cuisine: '和食', main: 'その他', ingredients: ['卵','鶏肉','えび','しいたけ','三つ葉'] },
+  { name: 'きんぴらごぼう', cuisine: '和食', main: 'その他', ingredients: ['ごぼう','にんじん'] },
+  { name: 'ひじきの煮物', cuisine: '和食', main: 'その他', ingredients: ['ひじき','にんじん','大豆'] },
+  { name: '野菜の煮物', cuisine: '和食', main: 'その他', ingredients: ['大根','にんじん','こんにゃく','しいたけ'] },
+
+  // 洋食 × 肉
+  { name: 'ハンバーグ', cuisine: '洋食', main: '肉', ingredients: ['牛肉','豚肉','ひき肉','玉ねぎ','卵','パン粉'] },
+  { name: 'オムライス', cuisine: '洋食', main: '肉', ingredients: ['鶏肉','玉ねぎ','卵','ご飯','ケチャップ'] },
+  { name: 'カルボナーラ', cuisine: '洋食', main: '肉', ingredients: ['ベーコン','卵','パスタ','チーズ','黒胡椒'] },
+  { name: 'ミートソースパスタ', cuisine: '洋食', main: '肉', ingredients: ['牛肉','ひき肉','玉ねぎ','トマト','パスタ','にんじん'] },
+  { name: 'ボロネーゼ', cuisine: '洋食', main: '肉', ingredients: ['牛肉','ひき肉','玉ねぎ','トマト','パスタ','セロリ'] },
+  { name: 'ビーフシチュー', cuisine: '洋食', main: '肉', ingredients: ['牛肉','玉ねぎ','にんじん','じゃがいも','マッシュルーム'] },
+  { name: 'ステーキ', cuisine: '洋食', main: '肉', ingredients: ['牛肉','にんにく'] },
+  { name: 'ローストビーフ', cuisine: '洋食', main: '肉', ingredients: ['牛肉','にんにく'] },
+  { name: 'ポトフ', cuisine: '洋食', main: '肉', ingredients: ['鶏肉','ソーセージ','キャベツ','にんじん','じゃがいも','玉ねぎ'] },
+  { name: 'ラザニア', cuisine: '洋食', main: '肉', ingredients: ['牛肉','ひき肉','トマト','チーズ','パスタ'] },
+  { name: 'ロールキャベツ', cuisine: '洋食', main: '肉', ingredients: ['豚肉','ひき肉','キャベツ','玉ねぎ','トマト'] },
+  { name: 'ポークソテー', cuisine: '洋食', main: '肉', ingredients: ['豚肉','玉ねぎ','にんにく'] },
+  { name: 'チキン南蛮', cuisine: '洋食', main: '肉', ingredients: ['鶏肉','卵','タルタル'] },
+  { name: 'ハヤシライス', cuisine: '洋食', main: '肉', ingredients: ['牛肉','玉ねぎ','マッシュルーム','ご飯','トマト'] },
+  { name: 'クリームシチュー', cuisine: '洋食', main: '肉', ingredients: ['鶏肉','玉ねぎ','にんじん','じゃがいも','牛乳'] },
+  { name: 'トンカツ', cuisine: '洋食', main: '肉', ingredients: ['豚肉','卵','パン粉','キャベツ'] },
+  { name: 'ローストチキン', cuisine: '洋食', main: '肉', ingredients: ['鶏肉','にんにく','ハーブ'] },
+  { name: 'チキンソテー', cuisine: '洋食', main: '肉', ingredients: ['鶏肉','にんにく'] },
+  { name: 'ガパオライス', cuisine: '洋食', main: '肉', ingredients: ['鶏肉','ひき肉','バジル','パプリカ','卵','ご飯'] },
+  { name: 'タコライス', cuisine: '洋食', main: '肉', ingredients: ['牛肉','ひき肉','レタス','トマト','チーズ','ご飯'] },
+  { name: 'カレーライス', cuisine: '洋食', main: '肉', ingredients: ['牛肉','豚肉','鶏肉','玉ねぎ','にんじん','じゃがいも','ご飯'] },
+  { name: 'ハッシュドビーフ', cuisine: '洋食', main: '肉', ingredients: ['牛肉','玉ねぎ','マッシュルーム','トマト','ご飯'] },
+  // 洋食 × 魚
+  { name: 'アクアパッツァ', cuisine: '洋食', main: '魚', ingredients: ['白身魚','トマト','あさり','にんにく','オリーブ'] },
+  { name: '白身魚のムニエル', cuisine: '洋食', main: '魚', ingredients: ['白身魚','バター','小麦粉','レモン'] },
+  { name: 'サーモンのソテー', cuisine: '洋食', main: '魚', ingredients: ['サーモン','鮭','バター','レモン'] },
+  { name: 'カキフライ', cuisine: '洋食', main: '魚', ingredients: ['牡蠣','パン粉','卵','キャベツ'] },
+  { name: 'エビフライ', cuisine: '洋食', main: '魚', ingredients: ['えび','パン粉','卵','キャベツ'] },
+  { name: 'イカリング', cuisine: '洋食', main: '魚', ingredients: ['イカ','パン粉','小麦粉'] },
+  { name: 'たらこパスタ', cuisine: '洋食', main: '魚', ingredients: ['たらこ','パスタ','バター','のり'] },
+  { name: 'ペスカトーレ', cuisine: '洋食', main: '魚', ingredients: ['えび','イカ','あさり','トマト','パスタ','にんにく'] },
+  { name: 'ボンゴレ', cuisine: '洋食', main: '魚', ingredients: ['あさり','パスタ','にんにく','白ワイン'] },
+  { name: 'シーフードグラタン', cuisine: '洋食', main: '魚', ingredients: ['えび','イカ','チーズ','マカロニ','牛乳'] },
+  // 洋食 × その他
+  { name: 'ペペロンチーノ', cuisine: '洋食', main: 'その他', ingredients: ['パスタ','にんにく','唐辛子'] },
+  { name: 'グラタン', cuisine: '洋食', main: 'その他', ingredients: ['マカロニ','玉ねぎ','チーズ','牛乳','バター'] },
+  { name: 'ドリア', cuisine: '洋食', main: 'その他', ingredients: ['ご飯','チーズ','牛乳','玉ねぎ','バター'] },
+  { name: 'ピザ', cuisine: '洋食', main: 'その他', ingredients: ['トマト','チーズ','バジル'] },
+  { name: 'シーザーサラダ', cuisine: '洋食', main: 'その他', ingredients: ['レタス','チーズ','クルトン'] },
+  { name: 'リゾット', cuisine: '洋食', main: 'その他', ingredients: ['米','チーズ','きのこ','玉ねぎ','バター'] },
+  { name: 'コロッケ', cuisine: '洋食', main: 'その他', ingredients: ['じゃがいも','玉ねぎ','ひき肉','パン粉','卵'] },
+  { name: 'ナポリタン', cuisine: '洋食', main: 'その他', ingredients: ['パスタ','ピーマン','玉ねぎ','ケチャップ','ソーセージ','マッシュルーム'] },
+  { name: 'ミネストローネ', cuisine: '洋食', main: 'その他', ingredients: ['トマト','にんじん','玉ねぎ','セロリ','じゃがいも'] },
+  { name: 'オニオングラタンスープ', cuisine: '洋食', main: 'その他', ingredients: ['玉ねぎ','チーズ','バゲット'] },
+
+  // 中華 × 肉
+  { name: '青椒肉絲', cuisine: '中華', main: '肉', ingredients: ['牛肉','ピーマン','たけのこ'] },
+  { name: '回鍋肉', cuisine: '中華', main: '肉', ingredients: ['豚肉','キャベツ','ピーマン','味噌'] },
+  { name: '餃子', cuisine: '中華', main: '肉', ingredients: ['豚肉','ひき肉','キャベツ','ニラ','にんにく'] },
+  { name: '春巻き', cuisine: '中華', main: '肉', ingredients: ['豚肉','春雨','たけのこ','しいたけ'] },
+  { name: '酢豚', cuisine: '中華', main: '肉', ingredients: ['豚肉','ピーマン','玉ねぎ','にんじん','パイナップル'] },
+  { name: '麻婆豆腐', cuisine: '中華', main: '肉', ingredients: ['豚肉','ひき肉','豆腐','ねぎ','にんにく'] },
+  { name: '麻婆茄子', cuisine: '中華', main: '肉', ingredients: ['豚肉','ひき肉','なす','ねぎ','ピーマン'] },
+  { name: '棒棒鶏', cuisine: '中華', main: '肉', ingredients: ['鶏肉','きゅうり','ごま'] },
+  { name: '担々麺', cuisine: '中華', main: '肉', ingredients: ['豚肉','ひき肉','麺','ねぎ','ごま','チンゲン菜'] },
+  { name: '油淋鶏', cuisine: '中華', main: '肉', ingredients: ['鶏肉','ねぎ','片栗粉'] },
+  { name: '麻婆春雨', cuisine: '中華', main: '肉', ingredients: ['豚肉','ひき肉','春雨','ねぎ','にら'] },
+  { name: '肉団子の甘酢あん', cuisine: '中華', main: '肉', ingredients: ['豚肉','ひき肉','玉ねぎ','ピーマン'] },
+  { name: 'よだれ鶏', cuisine: '中華', main: '肉', ingredients: ['鶏肉','ねぎ','ごま'] },
+  { name: 'ニラレバ炒め', cuisine: '中華', main: '肉', ingredients: ['レバー','ニラ','もやし'] },
+  { name: '焼売', cuisine: '中華', main: '肉', ingredients: ['豚肉','ひき肉','玉ねぎ'] },
+  // 中華 × 魚
+  { name: 'エビチリ', cuisine: '中華', main: '魚', ingredients: ['えび','ねぎ','にんにく','ケチャップ'] },
+  { name: 'エビマヨ', cuisine: '中華', main: '魚', ingredients: ['えび','マヨネーズ','レタス'] },
+  { name: '海老蒸し餃子', cuisine: '中華', main: '魚', ingredients: ['えび','片栗粉'] },
+  { name: '中華風蒸し魚', cuisine: '中華', main: '魚', ingredients: ['白身魚','ねぎ','生姜'] },
+  { name: '海鮮あんかけ焼きそば', cuisine: '中華', main: '魚', ingredients: ['えび','イカ','麺','白菜','にんじん'] },
+  // 中華 × その他
+  { name: '八宝菜', cuisine: '中華', main: 'その他', ingredients: ['白菜','豚肉','えび','うずらの卵','にんじん','しいたけ'] },
+  { name: '天津飯', cuisine: '中華', main: 'その他', ingredients: ['卵','かにかま','ご飯','ねぎ'] },
+  { name: 'チャーハン', cuisine: '中華', main: 'その他', ingredients: ['ご飯','卵','ねぎ','チャーシュー','ハム'] },
+  { name: '中華丼', cuisine: '中華', main: 'その他', ingredients: ['白菜','豚肉','えび','ご飯','うずらの卵'] },
+  { name: '五目焼きそば', cuisine: '中華', main: 'その他', ingredients: ['麺','白菜','豚肉','えび','にんじん','もやし'] },
+  { name: '五目あんかけ焼きそば', cuisine: '中華', main: 'その他', ingredients: ['麺','白菜','豚肉','えび','うずらの卵','にんじん'] }
+];
+
+// 各料理の栄養価目安値 [kcal, たんぱく質g, 脂質g, 糖質g] / 1人前
+const nutrition = {
+  '肉じゃが': [350, 15, 12, 40],
+  'すき焼き': [600, 35, 35, 25],
+  'しゃぶしゃぶ': [450, 30, 25, 15],
+  '親子丼': [700, 30, 15, 100],
+  '豚の生姜焼き': [400, 25, 22, 15],
+  '鶏の照り焼き': [380, 28, 18, 18],
+  'カツ丼': [850, 30, 30, 100],
+  '牛丼': [700, 22, 22, 95],
+  '焼き鳥': [250, 22, 15, 5],
+  '唐揚げ': [450, 25, 30, 18],
+  '筑前煮': [280, 18, 8, 30],
+  '豚汁': [200, 12, 10, 18],
+  '肉豆腐': [350, 25, 18, 15],
+  '豚の角煮': [550, 25, 40, 15],
+  'つくね': [300, 20, 18, 12],
+  '鶏の竜田揚げ': [400, 25, 22, 20],
+  '焼き鮭': [200, 25, 10, 0],
+  '鯖の味噌煮': [350, 22, 22, 12],
+  'さばの塩焼き': [250, 20, 18, 0],
+  'ぶり大根': [380, 25, 20, 18],
+  'ぶりの照り焼き': [350, 25, 18, 12],
+  '刺身定食': [550, 30, 10, 75],
+  '海鮮丼': [600, 30, 8, 95],
+  '握り寿司': [600, 30, 8, 95],
+  'ちらし寿司': [550, 25, 8, 95],
+  'さんまの塩焼き': [280, 22, 20, 0],
+  'いわしの蒲焼き': [250, 20, 12, 15],
+  'ちゃんちゃん焼き': [300, 25, 12, 20],
+  '鮭のホイル焼き': [250, 25, 10, 8],
+  'あじの南蛮漬け': [280, 20, 12, 18],
+  'カレイの煮付け': [200, 22, 5, 12],
+  'タラの煮付け': [180, 20, 2, 15],
+  'たこ焼き': [380, 15, 18, 40],
+  '天ぷら': [450, 15, 25, 40],
+  'おでん': [250, 18, 8, 25],
+  'お好み焼き': [600, 22, 30, 55],
+  '味噌煮込みうどん': [480, 22, 12, 65],
+  '茶碗蒸し': [100, 10, 5, 5],
+  'きんぴらごぼう': [100, 3, 5, 10],
+  'ひじきの煮物': [80, 5, 3, 8],
+  '野菜の煮物': [150, 5, 2, 25],
+  'ハンバーグ': [500, 25, 30, 25],
+  'オムライス': [700, 22, 28, 85],
+  'カルボナーラ': [750, 28, 38, 70],
+  'ミートソースパスタ': [650, 25, 22, 80],
+  'ボロネーゼ': [680, 28, 25, 80],
+  'ビーフシチュー': [500, 28, 22, 40],
+  'ステーキ': [500, 40, 35, 5],
+  'ローストビーフ': [350, 30, 22, 5],
+  'ポトフ': [350, 22, 15, 30],
+  'ラザニア': [600, 28, 30, 50],
+  'ロールキャベツ': [350, 20, 18, 25],
+  'ポークソテー': [450, 28, 28, 12],
+  'チキン南蛮': [700, 30, 40, 40],
+  'ハヤシライス': [750, 25, 25, 95],
+  'クリームシチュー': [450, 22, 22, 40],
+  'トンカツ': [600, 28, 35, 40],
+  'ローストチキン': [400, 35, 25, 5],
+  'チキンソテー': [400, 32, 25, 8],
+  'ガパオライス': [700, 30, 25, 85],
+  'タコライス': [700, 25, 28, 85],
+  'カレーライス': [800, 22, 28, 100],
+  'ハッシュドビーフ': [750, 25, 25, 95],
+  'アクアパッツァ': [350, 30, 18, 12],
+  '白身魚のムニエル': [300, 25, 15, 12],
+  'サーモンのソテー': [380, 28, 22, 8],
+  'カキフライ': [380, 12, 22, 30],
+  'エビフライ': [400, 20, 22, 30],
+  'イカリング': [350, 18, 18, 30],
+  'たらこパスタ': [600, 22, 22, 75],
+  'ペスカトーレ': [600, 30, 18, 75],
+  'ボンゴレ': [550, 22, 15, 75],
+  'シーフードグラタン': [550, 28, 25, 50],
+  'ペペロンチーノ': [500, 15, 18, 75],
+  'グラタン': [500, 18, 25, 50],
+  'ドリア': [600, 18, 25, 75],
+  'ピザ': [600, 25, 25, 70],
+  'シーザーサラダ': [300, 10, 22, 15],
+  'リゾット': [450, 15, 18, 55],
+  'コロッケ': [350, 8, 18, 40],
+  'ナポリタン': [550, 15, 18, 80],
+  'ミネストローネ': [180, 8, 5, 25],
+  'オニオングラタンスープ': [250, 10, 12, 25],
+  '青椒肉絲': [350, 22, 22, 18],
+  '回鍋肉': [450, 22, 30, 20],
+  '餃子': [400, 15, 20, 40],
+  '春巻き': [350, 10, 22, 30],
+  '酢豚': [500, 22, 22, 50],
+  '麻婆豆腐': [350, 22, 22, 15],
+  '麻婆茄子': [350, 15, 25, 18],
+  '棒棒鶏': [280, 25, 18, 8],
+  '担々麺': [700, 30, 35, 65],
+  '油淋鶏': [500, 28, 30, 25],
+  '麻婆春雨': [380, 15, 22, 30],
+  '肉団子の甘酢あん': [450, 20, 25, 35],
+  'よだれ鶏': [350, 28, 22, 10],
+  'ニラレバ炒め': [280, 22, 15, 12],
+  '焼売': [300, 15, 15, 25],
+  'エビチリ': [350, 22, 15, 25],
+  'エビマヨ': [400, 20, 22, 25],
+  '海老蒸し餃子': [250, 15, 8, 25],
+  '中華風蒸し魚': [250, 28, 10, 8],
+  '海鮮あんかけ焼きそば': [550, 25, 18, 70],
+  '八宝菜': [350, 20, 15, 25],
+  '天津飯': [600, 20, 15, 95],
+  'チャーハン': [650, 18, 22, 85],
+  '中華丼': [650, 25, 15, 95],
+  '五目焼きそば': [600, 22, 22, 75],
+  '五目あんかけ焼きそば': [600, 22, 18, 80]
+};
+
+const selected = { cuisine: new Set(), main: new Set() };
+const genreButtons = document.querySelectorAll('.genre-btn');
+const rouletteBtn = document.getElementById('rouletteBtn');
+const resultDish = document.getElementById('resultDish');
+const resultHint = document.getElementById('resultHint');
+const matchInfo = document.getElementById('matchInfo');
+const ingredientInput = document.getElementById('ingredientInput');
+const nutritionArea = document.getElementById('nutritionArea');
+const ntKcal = document.getElementById('ntKcal');
+const ntProtein = document.getElementById('ntProtein');
+const ntFat = document.getElementById('ntFat');
+const ntCarbs = document.getElementById('ntCarbs');
+
+function showNutrition(name) {
+  const data = nutrition[name];
+  if (!data) {
+    nutritionArea.style.display = 'none';
+    return;
+  }
+  ntKcal.textContent = data[0];
+  ntProtein.textContent = data[1];
+  ntFat.textContent = data[2];
+  ntCarbs.textContent = data[3];
+  nutritionArea.style.display = 'flex';
+}
+
+function hideNutrition() {
+  nutritionArea.style.display = 'none';
+}
+
+genreButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const group = btn.dataset.group;
+    const value = btn.dataset.value;
+    if (selected[group].has(value)) {
+      selected[group].delete(value);
+      btn.classList.remove('active');
+    } else {
+      selected[group].add(value);
+      btn.classList.add('active');
+    }
+  });
+});
+
+function parseIngredients(text) {
+  return text.split(/[、,，\s]+/).map(s => s.trim()).filter(Boolean);
+}
+
+function scoreDish(dish, userIngs) {
+  let matched = [];
+  for (const u of userIngs) {
+    const hit = dish.ingredients.find(ing => ing.includes(u) || u.includes(ing));
+    if (hit) matched.push(u);
+  }
+  return matched.length;
+}
+
+function getMatchedDishes() {
+  const userIngs = parseIngredients(ingredientInput.value);
+  const filtered = dishes.filter(d => {
+    const cuisineOK = selected.cuisine.size === 0 || selected.cuisine.has(d.cuisine);
+    const mainOK = selected.main.size === 0 || selected.main.has(d.main);
+    return cuisineOK && mainOK;
+  });
+
+  if (userIngs.length === 0) {
+    return { dishes: filtered.map(d => d.name), userIngCount: 0, topScore: 0 };
+  }
+
+  const scored = filtered.map(d => ({ name: d.name, score: scoreDish(d, userIngs) }));
+  const withMatch = scored.filter(s => s.score > 0);
+  if (withMatch.length === 0) {
+    return { dishes: [], userIngCount: userIngs.length, topScore: 0 };
+  }
+  const topScore = Math.max(...withMatch.map(s => s.score));
+  return {
+    dishes: withMatch.filter(s => s.score === topScore).map(s => s.name),
+    userIngCount: userIngs.length,
+    topScore: topScore
+  };
+}
+
+function pickRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function openRecipeSearch(dishName) {
+  const url = `https://www.google.com/search?q=${encodeURIComponent(dishName + ' レシピ')}`;
+  window.open(url, '_blank', 'noopener');
+}
+
+let spinning = false;
+rouletteBtn.addEventListener('click', () => {
+  if (spinning) return;
+
+  const matched = getMatchedDishes();
+
+  if (matched.dishes.length === 0) {
+    resultDish.classList.remove('placeholder', 'clickable', 'spinning');
+    resultDish.classList.add('error');
+    resultDish.textContent = '該当する料理が見つかりません';
+    matchInfo.style.display = 'none';
+    hideNutrition();
+    resultHint.innerHTML = '<div style="font-size:12px;color:#636e72;margin-top:8px;">条件を変えて試してみてください</div>';
+    return;
+  }
+
+  spinning = true;
+  rouletteBtn.disabled = true;
+  resultHint.innerHTML = '';
+  matchInfo.style.display = 'none';
+  hideNutrition();
+  resultDish.classList.remove('placeholder', 'clickable', 'error');
+  resultDish.classList.add('spinning');
+
+  let count = 0;
+  const totalSpins = 18;
+
+  function spin() {
+    resultDish.textContent = pickRandom(matched.dishes);
+    count++;
+    if (count < totalSpins) {
+      const interval = 50 + Math.pow(count / totalSpins, 2) * 250;
+      setTimeout(spin, interval);
+    } else {
+      const final = pickRandom(matched.dishes);
+      resultDish.textContent = final;
+      resultDish.classList.remove('spinning');
+      resultDish.classList.add('clickable');
+
+      if (matched.userIngCount > 0) {
+        matchInfo.textContent = `🥗 ${matched.userIngCount}食材中 ${matched.topScore}つマッチ`;
+        matchInfo.style.display = 'block';
+      }
+
+      showNutrition(final);
+
+      const url = `https://www.google.com/search?q=${encodeURIComponent(final + ' レシピ')}`;
+      resultHint.innerHTML = `<a class="result-link" href="${url}" target="_blank" rel="noopener">🔍 Googleでレシピを検索</a>`;
+      spinning = false;
+      rouletteBtn.disabled = false;
+    }
+  }
+  spin();
+});
+
+resultDish.addEventListener('click', () => {
+  if (!resultDish.classList.contains('clickable')) return;
+  openRecipeSearch(resultDish.textContent);
+});
+</script>
+</body>
+</html>
